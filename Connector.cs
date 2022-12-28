@@ -16,6 +16,7 @@ namespace NetworkModellingSoftware
 {
     public enum ConnectorMode {Input, Output}
 
+
     internal class Connector : Border
     {
         // private Ellipse ellipse;
@@ -28,7 +29,7 @@ namespace NetworkModellingSoftware
         private Workspace _workspace;
         public Point ConnectorAbsolutePos;
 
-        public Connector(ConnectorMode connectorMode, Node node, Workspace workspace)
+        public Connector(ConnectorMode connectorMode, Node node, Workspace workspace, int currentPosition)
         {
             ellipse = new Ellipse();
             ellipse.Width = 14;
@@ -40,9 +41,22 @@ namespace NetworkModellingSoftware
 
             _workspace = workspace;
 
-
             Child = ellipse;
             Canvas.SetZIndex(this, 1);
+            switch (connectorMode)
+            {
+                case ConnectorMode.Input:
+                    Canvas.SetLeft(this, -this.Width / 2 );
+                    Canvas.SetTop(this, currentPosition * 25 + 25);
+                    break;
+                case ConnectorMode.Output:
+                    Canvas.SetLeft(this, node.rectangle.Width - this.Width / 2);
+                    Canvas.SetTop(this, currentPosition * 25 + 25);
+                    break;
+
+
+            }
+
             this.connectorMode = connectorMode;
             this.node = node;
         }
@@ -56,11 +70,21 @@ namespace NetworkModellingSoftware
             get => ellipse.Height;
         }
 
+        public void Activate()
+        {
+            ellipse.Fill = (SolidColorBrush)new BrushConverter().ConvertFrom("#00FF00");
+        }
+
+        public void Deactivate()
+        {
+            ellipse.Fill = ColorPalette.CoralRed;
+        }
+
         public void Clicked()
         {
             if (!_isSelected && this.connectorMode == ConnectorMode.Output)
             {
-                ellipse.Fill = (SolidColorBrush)new BrushConverter().ConvertFrom("#00FF00");
+                Activate();
                 _isSelected = true;
                 _connection = _tempConnection = new Connection(_workspace);
                 _workspace.Children.Add(_connection);
@@ -68,27 +92,21 @@ namespace NetworkModellingSoftware
             }
             else if (_isSelected && this.connectorMode == ConnectorMode.Input)
             {
-                ellipse.Fill = (SolidColorBrush)new BrushConverter().ConvertFrom("#00FF00");
+                Activate();
                 _isSelected = false;
                 _connection = _tempConnection;
                 _connection.endConnector = this;
                 _connection.EndConnection();
             }
 
-            else if (_isSelected && this.connectorMode == ConnectorMode.Output)
+            else if (_isSelected && this.connectorMode == ConnectorMode.Output && _connection == null)
             {
-                ellipse.Fill = ColorPalette.CoralRed;
+                Deactivate();
                 _isSelected = false;
                 _connection = null;
             }
         }
-        /*
-        public Point ConnectorAbsolutePos
-        {
-            get => new Point(node.NodeAbsolutePos.X + Canvas.GetLeft(this) + 7, node.NodeAbsolutePos.Y + Canvas.GetTop(this) + 25);
 
-        }
-        */
         public void UpdateConnectorPosition(Point point)
         {
             ConnectorAbsolutePos = new Point(point.X + Canvas.GetLeft(this) + 7, point.Y + Canvas.GetTop(this) + 7);
@@ -98,12 +116,6 @@ namespace NetworkModellingSoftware
                 _connection.myLineSegment.Point3 = _connection.endConnector.ConnectorAbsolutePos;
                 _connection.myLineSegment.Point1 = new Point(_connection.myPathFigure.StartPoint.X + 100, _connection.myPathFigure.StartPoint.Y);
                 _connection.myLineSegment.Point2 = new Point(_connection.myLineSegment.Point3.X - 100, _connection.myLineSegment.Point3.Y);
-                /*
-                _connection.line.X1 = _connection.startConnector.ConnectorAbsolutePos.X;
-                _connection.line.Y1 = _connection.startConnector.ConnectorAbsolutePos.Y;
-                _connection.line.X2 = _connection.endConnector.ConnectorAbsolutePos.X;
-                _connection.line.Y2 = _connection.endConnector.ConnectorAbsolutePos.Y;
-                */
 
             }
             else if (_connection != null && _connection.endConnector == null)
@@ -117,8 +129,16 @@ namespace NetworkModellingSoftware
         {
             e.Handled = true;
             base.OnPreviewMouseLeftButtonDown(e);
-           // Trace.WriteLine(ConnectorAbsolutePos);
             Clicked();
+        }
+
+        public void DeleteVisualConnection()
+        {
+            if (_connection != null)
+            {
+                _connection.SelfDelete();
+                Trace.WriteLine("Good");
+            }
         }
     }
 }

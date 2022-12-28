@@ -38,25 +38,6 @@ namespace NetworkModellingSoftware
             line = new Line();
             _workspace = workspace;
         }
-        /*
-        public void EndConnection()
-        {
-
-            line.StrokeThickness = 3;
-            line.Stroke = (SolidColorBrush)new BrushConverter().ConvertFrom("#777777");
-
-            line.X1 = startConnector.ConnectorAbsolutePos.X;
-            line.Y1 = startConnector.ConnectorAbsolutePos.Y;
-            line.X2 = endConnector.ConnectorAbsolutePos.X;
-            line.Y2 = endConnector.ConnectorAbsolutePos.Y;
-
-            Canvas.SetZIndex(line, -2);
-
-            _workspace.Children.Add(line);
-            
-            Trace.WriteLine("Connection created. Start connector: " + startConnector.ConnectorAbsolutePos + " End connector: " + endConnector.ConnectorAbsolutePos);
-        }
-        */
         public void EndConnection()
         {
 
@@ -91,6 +72,13 @@ namespace NetworkModellingSoftware
             _workspace.Children.Add(myPath);
 
             Trace.WriteLine("Connection created. Start connector: " + startConnector.ConnectorAbsolutePos + " End connector: " + endConnector.ConnectorAbsolutePos);
+        }
+
+        public void SelfDelete()
+        {
+            _workspace.Children.Remove(myPath);
+            startConnector.Deactivate();
+            endConnector.Deactivate();
         }
 
     }

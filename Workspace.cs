@@ -22,9 +22,10 @@ namespace NetworkModellingSoftware
         private Point _currentPoint;
         private bool _isMoving;
 
+
+
         public Workspace()
         {
-
         }
 
         public UIElement FindChild(DependencyObject dependencyObject)
@@ -59,7 +60,10 @@ namespace NetworkModellingSoftware
                 (ItemDragging as Node).Select();
                 ItemDragging.CaptureMouse();
                 this._isMoving = true;
+
             }
+
+            else if (e.Source is Workspace)foreach (Node i in Children) i.Deselect();
 
         }
 

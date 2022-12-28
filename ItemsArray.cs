@@ -8,9 +8,9 @@ namespace NetworkModellingSoftware
 {
     internal class ItemsArray
     {
-        public List <Node> _nodes;
-        public List <Connector> _connectors; 
-        public List <Connection> _connections;
+        private List <Node> _nodes;
+        private List <Connector> _connectors;
+        private List <Connection> _connections;
 
         public ItemsArray()
         {
