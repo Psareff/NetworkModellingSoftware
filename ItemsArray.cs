@@ -8,13 +8,15 @@ namespace NetworkModellingSoftware
 {
     internal class ItemsArray
     {
-        public List<Node> _nodes;
+        public List <Node> _nodes;
         public List <Connector> _connectors; 
+        public List <Connection> _connections;
 
         public ItemsArray()
         {
             _nodes = new List<Node>();
             _connectors = new List<Connector>();
+            _connections = new List<Connection>();
         }
         public List<Node> nodes
         {
@@ -25,6 +27,11 @@ namespace NetworkModellingSoftware
         {
             get => _connectors;
             set => _connectors = value;
+        }
+        public List<Connection> connections
+        {
+            get => _connections;
+            set => _connections = value;
         }
     }
 }

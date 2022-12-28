@@ -52,22 +52,13 @@ namespace NetworkModellingSoftware
 
             if (ItemDragging != null)
                 (ItemDragging as Node).Deselect();
-            if (itemClicked != null)
+            if (itemClicked != null && itemClicked is Node)
             {
-                switch ((e.Source as FrameworkElement).GetType().ToString())
-                {
-                    case "System.Windows.Shapes.Ellipse":
-                        Trace.WriteLine("Connector {" + new Point(Canvas.GetLeft(itemClicked), GetTop(itemClicked) + 32) + "} Clicked");
-
-                        break;
-                    case "System.Windows.Shapes.Rectangle":
-                        Trace.WriteLine("Node Clicked");
-                        ItemDragging = itemClicked;
-                        (ItemDragging as Node).Select();
-                        ItemDragging.CaptureMouse();
-                        this._isMoving = true;
-                        break;
-                }
+                ItemDragging = itemClicked;
+                Trace.WriteLine("Node Clicked");
+                (ItemDragging as Node).Select();
+                ItemDragging.CaptureMouse();
+                this._isMoving = true;
             }
 
         }
@@ -85,7 +76,7 @@ namespace NetworkModellingSoftware
             base.OnPreviewMouseMove(e);
             if (_isMoving == true && e.LeftButton == MouseButtonState.Pressed)
             {
-            _currentPoint = e.GetPosition(this);
+                _currentPoint = e.GetPosition(this);
                 if (itemClicked != null && itemClicked is Node)
                 {
                     (itemClicked as Node)._location.X += _currentPoint.X - _startPoint.X;
@@ -94,10 +85,12 @@ namespace NetworkModellingSoftware
                     Canvas.SetLeft(itemClicked, (itemClicked as Node)._location.X);
                     Canvas.SetTop(itemClicked, (itemClicked as Node)._location.Y);
                     _startPoint = _currentPoint;
+                    (itemClicked as Node).NodeAbsolutePos(new Point(Canvas.GetLeft(itemClicked), Canvas.GetTop(itemClicked)));
+                }
 
                 }
             }
         }
 
     }
-}
+

@@ -31,7 +31,8 @@ namespace NetworkModellingSoftware
         {
             InitializeComponent();
             _nodeArray = new ItemsArray();
-            workspace.Children.Add(new Server(new Point(0,0), workspace, 5, 7));
+            workspace.Children.Add(new Node(new Point(0,0), workspace, 5, 7));
+            workspace.Children.Add(new Node(new Point(0,0), workspace, 5, 7));
 
         }
     }
