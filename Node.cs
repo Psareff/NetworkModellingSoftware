@@ -79,8 +79,7 @@ namespace NetworkModellingSoftware
                 rectangle.Height = _nodeInfo.inputDocksQty * 25 + 25;
             else rectangle.Height = _nodeInfo.outputDocksQty * 25 + 25;
             rectangle.MinHeight = 100;
-            this.Height = rectangle.Height;
-            this.MinHeight = rectangle.MinHeight;
+
 
             _infoPanel = new Border();
             _infoPanel.Width = rectangle.Width;
@@ -130,6 +129,7 @@ namespace NetworkModellingSoftware
             _infoPanel.BorderThickness = new Thickness(1,1,1,0);
             rectangle.Stroke = Brushes.LightGray;
             rectangle.StrokeThickness = 1;
+            Trace.WriteLine(Canvas.GetLeft(this)+ ";" + Canvas.GetTop(this));
         }
         internal void Deselect()
         {

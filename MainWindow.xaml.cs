@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System.IO;
+using Microsoft.Win32;
 
 namespace NetworkModellingSoftware
 {
@@ -56,12 +58,16 @@ namespace NetworkModellingSoftware
                 OutputDocksSetter.Text,
                 BandwidthSetter.Text
                 );
+            if (nodeInfo.isSuccessfullyCreated)
             workspace.Children.Add(new Node(new Point(0, 0), workspace, nodeInfo));
         }
 
-        private void SetterTextChanged(object sender, TextChangedEventArgs e)
+        private void ExportToPng_Click(object sender, RoutedEventArgs e)
         {
-
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Image files (*.png) | *.png";
+            saveFileDialog.ShowDialog();
+            System.IO.File.WriteAllBytes(saveFileDialog.FileName, workspace.Render().ToArray());
         }
 
 

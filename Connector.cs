@@ -99,11 +99,10 @@ namespace NetworkModellingSoftware
                 _connection.EndConnection();
             }
 
-            else if (_isSelected && this.connectorMode == ConnectorMode.Output && _connection == null)
+            else if (_isSelected && this.connectorMode == ConnectorMode.Output && _connection != null)
             {
-                Deactivate();
+                Activate();
                 _isSelected = false;
-                _connection = null;
             }
         }
 

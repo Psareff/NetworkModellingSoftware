@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Diagnostics;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace NetworkModellingSoftware
 {
@@ -63,7 +65,7 @@ namespace NetworkModellingSoftware
 
             }
 
-            else if (e.Source is Workspace)foreach (Node i in Children) i.Deselect();
+            else if (e.Source is Workspace) foreach (Node i in Children) i.Deselect();
 
         }
 
@@ -92,9 +94,26 @@ namespace NetworkModellingSoftware
                     (itemClicked as Node).NodeAbsolutePos(new Point(Canvas.GetLeft(itemClicked), Canvas.GetTop(itemClicked)));
                 }
 
-                }
             }
         }
+        public MemoryStream Render()
+        {
+            Rect rect = new Rect(this.RenderSize);
 
+            RenderTargetBitmap rtb = new RenderTargetBitmap(1300, 875, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+            rtb.Render(this);
+            //endcode as PNG
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            //save to memory stream
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+
+            pngEncoder.Save(ms);
+            ms.Close();
+            return ms;
+        }
     }
+
+}
 
